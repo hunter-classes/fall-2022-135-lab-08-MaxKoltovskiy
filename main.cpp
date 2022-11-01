@@ -1,7 +1,6 @@
 #include "funcs.h"
 #include <iostream>
 
-
 int main() 
 {
     invert("image1.pgm");
@@ -18,4 +17,8 @@ int main()
 
     scale("image3.pgm");
     std::cout<< "Scaled Image = \"taskE.pgm\" \n";
+
+    pixelate("image3.pgm");
+    std::cout<< "Pixelated Image = \"taskF.pgm\" \n";
+
 }

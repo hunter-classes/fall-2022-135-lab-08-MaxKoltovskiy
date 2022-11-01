@@ -1,7 +1,8 @@
 #include <iostream>
-#include "imageio.h"
 #include "funcs.h"
+#include <cmath>
 
+// Inverts all color 
 void invert(std::string input) 
 {
     int h,w;
@@ -20,6 +21,7 @@ void invert(std::string input)
   
 }
 
+// Inverts the color on the right half
 void halfInvert(std::string input)
 {
     int h,w;
@@ -42,6 +44,7 @@ void halfInvert(std::string input)
     writeImage("taskB.pgm", out, h, w);
 }
 
+// Makes a white box half the size of the image in the middle
 void box(std::string input) 
 {
     int h,w;
@@ -67,6 +70,7 @@ void box(std::string input)
     writeImage("taskC.pgm", out, h, w);
 }
 
+//Makes a white frame around the middle
 void frame(std::string input)
 {
     int h,w;
@@ -97,6 +101,7 @@ void frame(std::string input)
     writeImage("taskD.pgm", out, h, w);
 }
 
+// scales up the image by 200%
 void scale(std::string input)
 {
     int h,w;
@@ -109,10 +114,7 @@ void scale(std::string input)
     for(int row = 0; row < h; row++) {
         for(int col = 0; col< w; col++) {
             int pixel = img[row][col];
-            out[out_row][out_col] = pixel;
-            out[out_row][out_col+1] = pixel;
-            out[out_row+1][out_col] = pixel;
-            out[out_row+1][out_col+1] = pixel;
+            twoByTwo(out, out_row, out_col, pixel);
             out_col+=2;
         }
         out_row+=2;
@@ -120,4 +122,38 @@ void scale(std::string input)
     }
 
     writeImage("taskE.pgm", out, h*2, w*2);
+}
+
+void twoByTwo(int (&out)[MAX_H][MAX_W], int row, int col, int value) 
+{
+    out[row][col] = value;
+    out[row][col+1] = value;
+    out[row+1][col] = value;
+    out[row+1][col+1] = value;
+}
+// Pixelates the image
+void pixelate(std::string input)
+{
+    int h,w;
+    int img[MAX_H][MAX_W];
+    readImage(input, img, h, w);
+
+    int out[MAX_H][MAX_W];
+
+    for(int row = 0; row < h; row+=2) {
+        for(int col = 0; col < w; col+=2) {
+            double average = 0;
+            average += img[row][col];
+            average += img[row][col+1];
+            average += img[row+1][col];
+            average += img[row+1][col+1];
+
+            average = round(average/4);
+            
+            twoByTwo(out, row, col, average);
+
+        }
+    }
+
+    writeImage("taskF.pgm", out, h, w);
 }
